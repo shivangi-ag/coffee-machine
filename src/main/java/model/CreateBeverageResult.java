@@ -41,11 +41,18 @@ public class CreateBeverageResult {
 
   @Override
   public String toString() {
-    return "CreateBeverageResult{" +
-        "beverageName='" + beverageName + '\'' +
-        ", isSuccessful=" + isSuccessful +
-        ", ingredientMissing='" + ingredientMissing + '\'' +
-        ", reason=" + reason +
-        '}';
+    StringBuilder builder = new StringBuilder();
+    builder.append(beverageName);
+
+    if (isSuccessful) {
+      builder.append(" is prepared");
+    } else {
+      builder.append(" cannot be prepared because ")
+          .append(ingredientMissing)
+          .append(" is ")
+          .append(reason.getValue());
+    }
+
+    return builder.toString();
   }
 }

@@ -1,10 +1,7 @@
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import model.CreateBeverageResult;
-import model.Input;
 import model.Machine;
-import repository.Inventory;
 import service.CoffeeMachineBuilder;
 
 public class CoffeeMachine {
@@ -19,6 +16,16 @@ public class CoffeeMachine {
         .prepareBeverages(machine.getBeverages())
         .shutDownOutlets()
         .build();
+
+    readyBeverages.sort((one, two) -> {
+      if (one.isSuccessful() && two.isSuccessful()) {
+        return 0;
+      } else if (one.isSuccessful()) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
 
     return readyBeverages;
   }
