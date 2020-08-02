@@ -18,7 +18,7 @@ public class CoffeeMachineBuilder {
   private ExecutorService outlets;
   private List<CreateBeverageResult> results = new ArrayList<>();
 
-  public CoffeeMachineBuilder stockInventory(Map<String, Integer> ingredients) {
+  public CoffeeMachineBuilder stockUpInventory(Map<String, Integer> ingredients) {
     Inventory.getInstance().initialiseInventory(ingredients);
     return this;
   }
@@ -28,6 +28,9 @@ public class CoffeeMachineBuilder {
     return this;
   }
 
+  /**
+   * Prepares the given beverages in parallel using threadpool of size n (number of outlets)
+   */
   public CoffeeMachineBuilder prepareBeverages(
       Map<String, Map<String, Integer>> beverages) throws InterruptedException, ExecutionException {
 

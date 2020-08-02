@@ -11,7 +11,7 @@ public class CoffeeMachine {
 
     CoffeeMachineBuilder coffeeMachineBuilder = new CoffeeMachineBuilder();
     List<CreateBeverageResult> readyBeverages = coffeeMachineBuilder
-        .stockInventory(machine.getIngredients())
+        .stockUpInventory(machine.getIngredients())
         .startOutlets(machine.getOutlet().getCount())
         .prepareBeverages(machine.getBeverages())
         .shutDownOutlets()

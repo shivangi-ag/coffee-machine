@@ -29,6 +29,8 @@ public class CreateBeverageTask implements Callable<CreateBeverageResult> {
       result.setIngredientMissing(e.getIngredientName());
       result.setReason(e.getReason());
     }
+
+    System.out.println(result);
     return result;
 
   }

@@ -5,13 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 import model.FailureReason;
 
+/**
+ * Singleton class that acts as repository for all ingredients stocked up in coffee machine
+ */
 public class Inventory {
 
   private static Inventory inventory;
   private Map<String, Integer> quantityByIngredients;
+  private static final int MIN_QUANTITY = 50;
 
   private Inventory() {
-    quantityByIngredients = new HashMap<String, Integer>();
+    quantityByIngredients = new HashMap<>();
   }
 
   public static Inventory getInstance() {
@@ -22,9 +26,14 @@ public class Inventory {
   }
 
   public void initialiseInventory(Map<String, Integer> ingredients) {
-    quantityByIngredients = ingredients;
+    quantityByIngredients = new HashMap<>(ingredients);
   }
 
+  /**
+   * Lock is acquired on inventory when machine is preparing one beverage
+   *
+   * @throws IngredientException if any of the ingredient is missing or insufficient
+   */
   public synchronized void prepareBeverage(Map<String, Integer> beverageIngredients)
       throws IngredientException {
 
@@ -49,6 +58,28 @@ public class Inventory {
       transactionLog.put(ingredientName, availableQuantity);
       quantityByIngredients.put(ingredientName, updatedQuantity);
     }
+
+    inventoryCheck();
+  }
+
+  /**
+   * Indicates when ingredients are running low
+   */
+  private void inventoryCheck() {
+    quantityByIngredients.entrySet().stream().forEach(e -> {
+      if (e.getValue() < MIN_QUANTITY) {
+        System.out.println(
+            "REFILL ALERT! " + e.getKey() + " is running low at: " + e.getValue());
+      }
+    });
+  }
+
+  /**
+   * Coffee Machine won't be able to order any beverage while inventory is being refilled
+   */
+  public synchronized void refillInventory(String ingredientName, Integer refillQuantity) {
+    Integer existingInventory = quantityByIngredients.getOrDefault(ingredientName, 0);
+    quantityByIngredients.put(ingredientName, existingInventory + refillQuantity);
   }
 
   private void doInventoryRollback(Map<String, Integer> transactionLog) {
