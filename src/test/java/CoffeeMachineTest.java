@@ -7,18 +7,25 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import model.CreateBeverageResult;
 import model.Input;
+import model.Machine;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public class ApplicationMain {
+class CoffeeMachineTest {
 
-  public static void main(String[] args)
-      throws FileNotFoundException, InterruptedException, ExecutionException {
+  private CoffeeMachine coffeeMachine = new CoffeeMachine();
+  private static Machine machine;
 
-    CoffeeMachine coffeeMachine = new CoffeeMachine();
-    List<CreateBeverageResult> output = coffeeMachine.run(getInput().getMachine());
+  @BeforeAll
+  public static void initialize() throws FileNotFoundException {
+    machine = getInput().getMachine();
+  }
 
-    for (CreateBeverageResult result : output) {
-      System.out.println(result.toString());
-    }
+  @Test
+  public void testBeveragePreparation() throws ExecutionException, InterruptedException {
+    List<CreateBeverageResult> results = coffeeMachine.run(machine);
+
+    System.out.println("done");
 
   }
 
@@ -30,7 +37,7 @@ public class ApplicationMain {
 
   private static File getFileFromResources(String fileName) {
 
-    ClassLoader classLoader = ApplicationMain.class.getClassLoader();
+    ClassLoader classLoader = CoffeeMachineTest.class.getClassLoader();
     URL resource = classLoader.getResource(fileName);
 
     if (resource == null) {
@@ -40,4 +47,5 @@ public class ApplicationMain {
     }
 
   }
+
 }
